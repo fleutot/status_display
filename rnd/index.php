@@ -4,7 +4,7 @@ if($_POST['statusFormSubmit'] == "Submit")
     //alert("in php");
     $varStatus = $_POST['statusInput'];
     //alert("$varStatus");
-    $path=$_SERVER['DOCUMENT_ROOT'] . '/resources/management.txt';
+    $path=$_SERVER['DOCUMENT_ROOT'] . '/resources/rnd.txt';
     alert("$path");
     $fs = fopen($path, "w");
     if ( !$fs) {
@@ -37,8 +37,8 @@ function alert($msg) {
     <link rel="stylesheet" href="../w3.css">
   </head>
   <body>
-    <div class="w3-container w3-orange">
-      <h1>management</h1>
+    <div class="w3-container w3-blue">
+      <h1>R&D</h1>
     </div>
 
     Status:

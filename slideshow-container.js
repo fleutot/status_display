@@ -27,6 +27,26 @@ function showSlides(n) {
   dots[slideIndex-1].className += " active";
 }
 
+function send_data(id, filename) {
+    var txtFile = new XMLHttpRequest();
+    txtFile.open("GET", filename, true);
+    txtFile.onreadystatechange = function() {
+      if (txtFile.readyState === 4) {  // Makes sure the document is ready to parse.
+        if (txtFile.status === 200 || txtFile.status == 0) {  // Makes sure it's found the file.
+          var allText = txtFile.responseText;
+          //alert(filename);
+          //alert(txtFile.readyState);
+          //alert(txtFile.status);
+          //alert(txtFile.statusText);
+          //alert(txtFile.responseText);
+          //lines = txtFile.responseText.split("\n"); // Will separate each line into an array
+          document.getElementById(id).innerHTML = allText;
+        }
+      }
+    }
+    txtFile.send();
+}
+
 function carousel() {
   var i;
   var filename;
@@ -45,29 +65,19 @@ function carousel() {
 
   filename = x[slideIndex].dataset.fileRnd;
   if (filename) {
-    var txtFile = new XMLHttpRequest();
-    txtFile.open("GET", filename, true);
-    txtFile.onreadystatechange = function() {
-      if (txtFile.readyState === 4) {  // Makes sure the document is ready to parse.
-        if (txtFile.status === 200 || txtFile.status == 0) {  // Makes sure it's found the file.
-          var allText = txtFile.responseText;
-          //alert(filename);
-          //alert(txtFile.readyState);
-          //alert(txtFile.status);
-          //alert(txtFile.statusText);
-          //alert(txtFile.responseText);
-          //lines = txtFile.responseText.split("\n"); // Will separate each line into an array
-          document.getElementById("status_rnd").innerHTML = allText;
-        }
-      }
-    }
-    txtFile.send();
+    send_data("status_rnd", filename);
   }
-  if (x[slideIndex].dataset.fileSales) {
-    document.getElementById("status_sales").innerHTML = x[slideIndex].dataset.fileSales;
+  filename = x[slideIndex].dataset.fileSales;
+  if (filename) {
+    send_data("status_sales", filename);
   }
-  if (x[slideIndex].dataset.fileRnd) {
-    document.getElementById("status_marketing").innerHTML = x[slideIndex].dataset.fileMarketing;
+  filename = x[slideIndex].dataset.fileMarketing;
+  if (filename) {
+    send_data("status_marketing", filename);
+  }
+  filename = x[slideIndex].dataset.fileManagement;
+  if (filename) {
+    send_data("status_management", filename);
   }
 
   setTimeout(carousel, timeout);
