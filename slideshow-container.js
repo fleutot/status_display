@@ -27,24 +27,26 @@ function showSlides(n) {
   dots[slideIndex-1].className += " active";
 }
 
-function send_data(id, filename) {
-    var txtFile = new XMLHttpRequest();
-    txtFile.open("GET", filename, true);
-    txtFile.onreadystatechange = function() {
-      if (txtFile.readyState === 4) {  // Makes sure the document is ready to parse.
-        if (txtFile.status === 200 || txtFile.status == 0) {  // Makes sure it's found the file.
-          var allText = txtFile.responseText;
-          //alert(filename);
-          //alert(txtFile.readyState);
-          //alert(txtFile.status);
-          //alert(txtFile.statusText);
-          //alert(txtFile.responseText);
-          //lines = txtFile.responseText.split("\n"); // Will separate each line into an array
-          document.getElementById(id).innerHTML = allText;
-        }
+function send_data_from_file(id, filename) {
+  var txtFile = new XMLHttpRequest();
+
+  txtFile.open("GET", filename, true);
+  txtFile.onreadystatechange = function() {
+    if (txtFile.readyState === 4) {  // Makes sure the document is ready to parse.
+      if (txtFile.status === 200 || txtFile.status == 0) {  // Makes sure it's found the file.
+        var allText = txtFile.responseText;
+        //alert(filename);
+        //alert(txtFile.readyState);
+        //alert(txtFile.status);
+        //alert(txtFile.statusText);
+        //alert(txtFile.responseText);
+        //lines = txtFile.responseText.split("\n"); // Will separate each line into an array
+        document.getElementById(id).innerHTML = allText;
       }
     }
-    txtFile.send();
+  }
+  txtFile.setRequestHeader('pragma', 'no-cache');
+  txtFile.send();
 }
 
 function carousel() {
@@ -63,21 +65,25 @@ function carousel() {
     timeout = 500; // Default
   }
 
+  // The info in the files is not automatically updated. Even on refresh!
+  // Force reload with Ctrl+F5. How to make this automatic?
+  //alert("carousel");
   filename = x[slideIndex].dataset.fileRnd;
   if (filename) {
-    send_data("status_rnd", filename);
+    //alert("reading rnd");
+    send_data_from_file("status_rnd", filename);
   }
   filename = x[slideIndex].dataset.fileSales;
   if (filename) {
-    send_data("status_sales", filename);
+    send_data_from_file("status_sales", filename);
   }
   filename = x[slideIndex].dataset.fileMarketing;
   if (filename) {
-    send_data("status_marketing", filename);
+    send_data_from_file("status_marketing", filename);
   }
   filename = x[slideIndex].dataset.fileManagement;
   if (filename) {
-    send_data("status_management", filename);
+    send_data_from_file("status_management", filename);
   }
 
   setTimeout(carousel, timeout);
