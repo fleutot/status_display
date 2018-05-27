@@ -16,7 +16,7 @@
 
       <!-- Full-width images with number and caption text -->
       <div class="mySlides fade" data-timeout="2000">
-         <img src="resources/updated_image.jpg?v=<?php time(); ?>" style="width:100%">
+         <img src="resources/updated_image.jpg?v=<?= file_get_contents('./timestamp.txt') ?>" style="width:100%">
       </div>
 
       <div class="mySlides fade" data-timeout="3000" data-file-rnd="resources/rnd.txt" data-file-sales="resources/sales.txt" data-file-marketing="resources/marketing.txt" data-file-management="resources/management.txt">
@@ -40,37 +40,41 @@
           <h6 align="right">Management</h6>
         </div>
       </div>
-<!--
-      <div class="mySlides fade">
-        <div class="numbertext">1 / 3</div>
-        <img src="img1.jpg" style="width:100%">
-      </div>
-
-      <div class="mySlides fade">
-        <div class="numbertext">2 / 3</div>
-        <img src="img2.jpg" style="width:100%">
-        <div class="text">Caption Two</div>
-      </div>
--->
-      <!-- Next and previous buttons -->
-      <!--
-      <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-      <a class="next" onclick="plusSlides(1)">&#10095;</a>
-      -->
     </div>
     <br>
-
-    <!-- The dots/circles -->
-    <!--
-    <div style="text-align:center">
-      <span class="dot" onclick="currentSlide(1)"></span> 
-      <span class="dot" onclick="currentSlide(2)"></span> 
-      <span class="dot" onclick="currentSlide(3)"></span >
-    </div>
-     -->
     <p id="debug"></p>
 
     <!--<script src="jquery-3.3.1.min.js"></script>-->
+    <script type="application/javascript">
+        let image = document.querySelector('.mySlides img'),
+            src = image.getAttribute('src');
+        const imageVersion = src.substring(src.indexOf('=') + 1);
+
+        function loadTimestamp() {
+            let xmlHR = new XMLHttpRequest();
+
+            xmlHR.onreadystatechange = function() {
+                if (xmlHR.readyState == XMLHttpRequest.DONE) {
+                    if (xmlHR.status == 200) {
+                        if (xmlHR.responseText !== imageVersion) {
+                            image.setAttribute('src', src.substring(0,src.indexOf('=') + 1) + xmlHR.responseText);
+                        }
+                    }
+                    else if (xmlHR.status == 400) {
+                        alert('There was an error 400');
+                    }
+                    else {
+                        alert('something else other than 200 was returned');
+                    }
+                }
+            };
+
+            xmlHR.open("GET", "timestamp.txt?v=" + new Date().getTime(), true);
+            xmlHR.send();
+            setTimeout(loadTimestamp, 5000);
+        }
+        loadTimestamp();
+    </script>
 
     <script src="slideshow-container.js"></script>
   </body>
